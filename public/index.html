@@ -18,53 +18,8 @@
     </div>
     <!-- END CONTAINER -->
 
-    <!-- ROW TEMPLATE -->
+    <!-- ROW TEMPLATE (will be generated dynamically) -->
     <script type="text/template" id="row_template">
-        <div class="row">
-            <div class="group text">
-                <!-- 40 columns for text -->
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-                <div class="full"><span></span></div>
-            </div>
-        </div>
     </script>
     <!-- END ROW TEMPLATE -->
 
@@ -77,22 +32,37 @@
 
     <!-- CUSTOMIZATION OPTIONS AND SCRIPT INITIALIZATION -->
     <script type="text/javascript">
-        sf.options = {
-            plugin: 'arrivals',
-            container: $('#board'),
-            template: $('#row_template'),
-            numRows: 10, // 10 lines
-            sort: false,
-            order: 'asc',
-            maxResults: 10,
-            pageInterval: 20000,
-            stagger: 300
-        };
-
         $(document).ready(function() {
-            sf.board.init(sf.options);
-            sf.items.init(sf.options);
-            sf.items.load(sf.options);
+            // Fetch configuration first
+            $.get('/api/config', function(config) {
+                const numRows = config.rows || 10;
+                const numColumns = config.columns || 40;
+
+                // Generate row template dynamically based on columns
+                let templateHTML = '<div class="row"><div class="group text">';
+                for (let i = 0; i < numColumns; i++) {
+                    templateHTML += '<div class="full"><span></span></div>';
+                }
+                templateHTML += '</div></div>';
+                $('#row_template').html(templateHTML);
+
+                // Initialize split flap with configuration
+                sf.options = {
+                    plugin: 'arrivals',
+                    container: $('#board'),
+                    template: $('#row_template'),
+                    numRows: numRows,
+                    sort: false,
+                    order: 'asc',
+                    maxResults: numRows,
+                    pageInterval: 20000,
+                    stagger: 300
+                };
+
+                sf.board.init(sf.options);
+                sf.items.init(sf.options);
+                sf.items.load(sf.options);
+            });
 
             // Update the current time every second
             function updateTime() {

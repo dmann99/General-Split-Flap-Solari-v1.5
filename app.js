@@ -1,8 +1,14 @@
 const fs = require('fs');
 const express = require('express');
+const propertiesReader = require('properties-reader');
 const app = express();
 
-const jsonFilePath = 'output.json'; // Replace with the path to your JSON file
+// Load configuration from properties file
+const config = propertiesReader('config.properties');
+const rows = config.get('rows') || 10;
+const columns = config.get('columns') || 40;
+const jsonFilePath = config.get('dataFile') || 'output.json';
+const updateInterval = config.get('updateInterval') || 55000;
 
 // Function to read JSON file
 function readJsonFile() {
@@ -17,30 +23,38 @@ function readJsonFile() {
 // Initially read the JSON file
 let jsonData = readJsonFile();
 
-// Update jsonData every 55 seconds
+// Update jsonData based on configured interval
 setInterval(() => {
     jsonData = readJsonFile();
-}, 55000);
+}, updateInterval);
+
+// Configuration endpoint
+app.use('/api/config', (_req, res) => {
+    res.json({
+        rows: rows,
+        columns: columns
+    });
+});
 
 app.use('/api/display', (_req, res) => {
     let r = { data: [] };
 
-    // Convert array to simple text rows (max 10 rows)
-    const rows = Array.isArray(jsonData) ? jsonData : [];
+    // Convert array to simple text rows (max configured rows)
+    const dataRows = Array.isArray(jsonData) ? jsonData : [];
 
-    rows.forEach((entry, index) => {
-        if (index < 10) { // Maximum 10 lines
+    dataRows.forEach((entry, index) => {
+        if (index < rows) { // Maximum configured lines
             let text = entry.text || '';
 
             // Center the text if centered option is true
-            if (entry.centered === true && text.length < 40) {
-                const totalPadding = 40 - text.length;
+            if (entry.centered === true && text.length < columns) {
+                const totalPadding = columns - text.length;
                 const leftPadding = Math.floor(totalPadding / 2);
                 text = ' '.repeat(leftPadding) + text;
             }
 
-            // Ensure text doesn't exceed 40 characters
-            text = text.substring(0, 40);
+            // Ensure text doesn't exceed configured columns
+            text = text.substring(0, columns);
 
             let data = {
                 text: text

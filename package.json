@@ -5,9 +5,9 @@
   "main": "app.js",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "properties-reader": "^2.3.0"
   },
-
   "scripts": {
     "run-python": "python3 \"Solari Board V2.1.py\" &",
     "start-node": "node app.js",
