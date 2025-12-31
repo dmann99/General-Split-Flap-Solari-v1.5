@@ -1,32 +1,12 @@
 [
-    {
-        "text": "HELLO WORLD - LINE 1"
-    },
-    {
-        "text": "THIS IS A GENERIC SPLIT FLAP DISPLAY"
-    },
-    {
-        "text": "40 COLUMNS AND 10 LINES"
-    },
-    {
-        "text": "EDIT OUTPUT.JSON TO CHANGE THE TEXT"
-    },
-    {
-        "text": "EACH ROW CAN HOLD UP TO 40 CHARACTERS"
-    },
-    {
-        "text": "LINE 6"
-    },
-    {
-        "text": "LINE 7"
-    },
-    {
-        "text": "LINE 8"
-    },
-    {
-        "text": "LINE 9"
-    },
-    {
-        "text": "LINE 10"
-    }
+    {"text": "HELLO WORLD - LINE 1", "centered": true},
+    {"text": "THIS IS A GENERIC SPLIT FLAP DISPLAY", "centered": false},
+    {"text": "DEMONSTRATION - LINE 3", "centered": true},
+    {"text": "YOU CAN CUSTOMIZE THE TEXT", "centered": false},
+    {"text": "40 COLUMNS AND 10 LINES", "centered": true},
+    {"text": "EDIT OUTPUT.JSON TO CHANGE THE TEXT", "centered": false},
+    {"text": "EACH ROW CAN HOLD UP TO 40 CHARACTERS", "centered": false},
+    {"text": "LINE 8", "centered": true},
+    {"text": "LINE 9", "centered": true},
+    {"text": "LINE 10", "centered": true}
 ]

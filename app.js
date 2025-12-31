@@ -30,8 +30,20 @@ app.use('/api/display', (_req, res) => {
 
     rows.forEach((entry, index) => {
         if (index < 10) { // Maximum 10 lines
+            let text = entry.text || '';
+
+            // Center the text if centered option is true
+            if (entry.centered === true && text.length < 40) {
+                const totalPadding = 40 - text.length;
+                const leftPadding = Math.floor(totalPadding / 2);
+                text = ' '.repeat(leftPadding) + text;
+            }
+
+            // Ensure text doesn't exceed 40 characters
+            text = text.substring(0, 40);
+
             let data = {
-                text: entry.text || ''  // Just text, up to 40 characters
+                text: text
             };
             r.data.push(data);
         }
