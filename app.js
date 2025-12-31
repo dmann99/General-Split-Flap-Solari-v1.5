@@ -17,36 +17,22 @@ function readJsonFile() {
 // Initially read the JSON file
 let jsonData = readJsonFile();
 
-// Update jsonData every 30 seconds
-setInterval(() => { 
+// Update jsonData every 55 seconds
+setInterval(() => {
     jsonData = readJsonFile();
-}, 55000); // 30000 milliseconds = 30 seconds
+}, 55000);
 
-app.use('/api/arrivals', (req, res) => {
+app.use('/api/display', (_req, res) => {
     let r = { data: [] };
 
-    // Convert the object values to an array and then iterate
-    Object.values(jsonData).forEach((entry, index) => {
-        if (index <= 45) { // ADJUST THIS IF YOU WANT MORE  OR LESS  RESULTS
+    // Convert array to simple text rows (max 10 rows)
+    const rows = Array.isArray(jsonData) ? jsonData : [];
+
+    rows.forEach((entry, index) => {
+        if (index < 10) { // Maximum 10 lines
             let data = {
-                line: entry.route_id, 
-                stop: entry.current_stop,      // Using route_id as an example
-                terminal: entry.last_stop_name,    // Using last_stop_name as an example
-                scheduled: entry.arrival_time,
-                remarks: entry.service_status  // Using arrival_time as an example
+                text: entry.text || ''  // Just text, up to 40 characters
             };
-
-                   // Let's add an occasional delayed flight.
-                data.status =  entry.service_status ;
-                if (data.status === 'SERVICE CHANGE' || data.status === 'DELAYS') {
-                    data.status = 'B';
-                } else {
-                    data.status = 'A' ;
-                }
-                
-            
-
-
             r.data.push(data);
         }
     });
