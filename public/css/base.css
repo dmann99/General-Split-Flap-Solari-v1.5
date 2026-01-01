@@ -3,6 +3,12 @@ body {
   color: #fff;
   font-family: helvetica, sans-serif;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 a {
@@ -10,10 +16,8 @@ a {
   text-decoration: none;
 }
 .splitflap {
-  width: 1600px;
   overflow: hidden;
   white-space: nowrap;
-  margin: 5px 5px;
 }
 .splitflap h1 {
   text-transform: uppercase;
