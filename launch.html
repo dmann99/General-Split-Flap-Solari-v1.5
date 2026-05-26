@@ -122,7 +122,7 @@
       const json = JSON.stringify(values);
       const encoded = encodeURIComponent(json);
       jsonOutput.textContent = json;
-      const url = 'target?INPUT=' + encoded;
+      const url = 'target.html?INPUT=' + encoded;
       urlOutput.textContent = url;
       urlOutput.href = url;
     }

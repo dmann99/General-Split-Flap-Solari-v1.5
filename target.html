@@ -56,7 +56,36 @@
                 return { text: String(s || '') };
             });
 
+            // Audio: play on load, stop when all flap animations finish
+            const audio = new Audio('freesound_community-split-flap-display.mp3');
+            audio.loop = true;
+            let animationsDone = false;
+
+            // Try autoplay. If the browser blocks it, start on the first user interaction.
+            // The guard ensures a late click never restarts audio after animations are done.
+            audio.play().catch(() => {
+                const startOnInteraction = () => {
+                    if (!animationsDone) audio.play().catch(() => {});
+                };
+                document.addEventListener('click', startOnInteraction, { once: true });
+                document.addEventListener('keydown', startOnInteraction, { once: true });
+            });
+
             sf.display.loadSequentially(displayData, sf.options.container);
+
+            // Wait until all rows have started animating, then poll for completion.
+            // Last row begins at NUM_ROWS * stagger ms; add one extra stagger as buffer.
+            const pollDelay = (NUM_ROWS + 1) * sf.options.stagger;
+            setTimeout(() => {
+                const checkDone = setInterval(() => {
+                    if ($(':animated').length === 0) {
+                        clearInterval(checkDone);
+                        animationsDone = true;
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                }, 100);
+            }, pollDelay);
         });
     </script>
 </body>
