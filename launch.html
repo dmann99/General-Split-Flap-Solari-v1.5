@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Split Flap Launch Page</title>
+  <style>
+    body {
+      font-family: monospace;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+    }
+    h2 {
+      color: #9cdcfe;
+      margin-bottom: 24px;
+    }
+    .fields {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 2px;
+      display: block;
+    }
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      background: #2d2d2d;
+      border: 1px solid #444;
+      color: #d4d4d4;
+      padding: 8px 10px;
+      font-family: monospace;
+      font-size: 14px;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.15s;
+      text-transform: uppercase;
+    }
+    input[type="text"]:focus {
+      border-color: #569cd6;
+    }
+    .output-section {
+      margin-bottom: 20px;
+    }
+    .output-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .output-box {
+      background: #2d2d2d;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 12px 14px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      font-size: 13px;
+      color: #ce9178;
+      min-height: 36px;
+    }
+    .url-box,
+    .url-box a {
+      color: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+  <h2>Split Flap Launch Page</h2>
+
+  <div class="fields">
+    <div>
+      <label>Field 1</label>
+      <input type="text" id="f1" maxlength="40" placeholder="up to 40 characters">
+    </div>
+    <div>
+      <label>Field 2</label>
+      <input type="text" id="f2" maxlength="40" placeholder="up to 40 characters">
+    </div>
+    <div>
+      <label>Field 3</label>
+      <input type="text" id="f3" maxlength="40" placeholder="up to 40 characters">
+    </div>
+    <div>
+      <label>Field 4</label>
+      <input type="text" id="f4" maxlength="40" placeholder="up to 40 characters">
+    </div>
+  </div>
+
+  <div class="output-section">
+    <div class="output-label">JSON Array</div>
+    <div class="output-box" id="json-output"></div>
+  </div>
+
+  <div class="output-section">
+    <div class="output-label">Launch URL</div>
+    <div class="output-box url-box"><a id="url-output" href="#" target="_blank" rel="noopener"></a></div>
+  </div>
+
+  <script>
+    const ids = ['f1', 'f2', 'f3', 'f4'];
+    const jsonOutput = document.getElementById('json-output');
+    const urlOutput = document.getElementById('url-output');
+
+    function update() {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        const upper = el.value.toUpperCase();
+        if (el.value !== upper) {
+          const pos = el.selectionStart;
+          el.value = upper;
+          el.setSelectionRange(pos, pos);
+        }
+      });
+      const values = ids.map(id => document.getElementById(id).value);
+      const json = JSON.stringify(values);
+      const encoded = encodeURIComponent(json);
+      jsonOutput.textContent = json;
+      const url = 'target.html?INPUT=' + encoded;
+      urlOutput.textContent = url;
+      urlOutput.href = url;
+    }
+
+    ids.forEach(id => document.getElementById(id).addEventListener('input', update));
+    update();
+  </script>
+</body>
+</html>

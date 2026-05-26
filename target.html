@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Flap Display</title>
+    <link rel="stylesheet" href="public/css/base.css">
+</head>
+<body>
+    <div id="board" class="chartContainer splitflap"></div>
+
+    <script type="text/template" id="row_template"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
+    <script src="public/js/split-flap.js"></script>
+
+    <script>
+        const NUM_COLUMNS = 40;
+        const NUM_ROWS = 4;
+
+        $(document).ready(function () {
+            const params = new URLSearchParams(window.location.search);
+            const raw = params.get('INPUT');
+            let inputRows = [];
+            if (raw) {
+                try {
+                    const parsed = JSON.parse(decodeURIComponent(raw));
+                    inputRows = Array.isArray(parsed) ? parsed : [];
+                } catch (e) {
+                    console.error('Failed to parse INPUT:', e);
+                }
+            }
+
+            // Build row template: one "text" group spanning all columns
+            let tmpl = '<div class="row"><div class="group text">';
+            for (let i = 0; i < NUM_COLUMNS; i++) {
+                tmpl += '<div class="full"><span></span></div>';
+            }
+            tmpl += '</div></div>';
+            $('#row_template').html(tmpl);
+
+            sf.options = {
+                container: $('#board'),
+                template: $('#row_template'),
+                numRows: NUM_ROWS,
+                stagger: 300
+            };
+
+            sf.board.init(sf.options);
+
+            // Map each input string to the { text: "..." } shape loadRow expects
+            const displayData = inputRows.map(function (s) {
+                return { text: String(s || '') };
+            });
+
+            sf.display.loadSequentially(displayData, sf.options.container);
+        });
+    </script>
+</body>
+</html>
